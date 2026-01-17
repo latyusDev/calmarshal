@@ -10,9 +10,32 @@ import { ThemeToggle } from '../components/ThemeToggle'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { auth, signOut } from '../lib/auth'
 import { requireUser } from '../lib/hooks'
+import prisma from '@/lib/db'
+import { redirect } from 'next/navigation'
+
+
+async function getData(id:string) {
+
+    const data = await prisma.user.findUnique({
+        where:{
+            id
+        },
+        select:{
+            userName:true
+        }
+    })
+    if(!data?.userName){
+        redirect('onboarding');
+    }
+    return data;
+}
+
 
 const layout = async({children}:{children:ReactNode}) => {
     const session = await requireUser()
+    if(session.user?.id){
+        await getData(session.user?.id)
+    }
   return (
     <div className='min-h-screen w-full grid md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]'>
         <div className='hidden md:block border-r bg-muted/40'>
@@ -79,8 +102,10 @@ const layout = async({children}:{children:ReactNode}) => {
             </div>
             </header>
 
+        <main className='flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6'>
+            {children}
+        </main>
         </div>
-        {/* {children} */}
         </div>
   )
 }

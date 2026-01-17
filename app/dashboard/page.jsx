@@ -7,6 +7,6 @@ export default async function DashboardPage(){
   const session = await requireUser()
   console.log(session)   
   return (
-    <div className='bg-muted/40 p-44'>DashboardPage</div>
+    <div className='bg-muted/40 '>DashboardPage</div>
   )
 }
