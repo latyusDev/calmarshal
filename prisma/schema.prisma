@@ -55,6 +55,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  availability Availability[]
  
   @@map("users")
 }
@@ -66,4 +67,26 @@ model VerificationToken {
  
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+ 
+model Availability {
+  id         String  @id @default(cuid())
+  day Day
+  fromTime   String 
+  tillTime   String
+  isActive   Boolean @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String?   @map("user_id")
+  user       User? @relation(fields: [userId],references: [id], onDelete: Cascade)
+}
+
+enum Day{
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
 }
