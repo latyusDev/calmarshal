@@ -17,7 +17,7 @@ export function GoogleAuthButton(){
     const {pending} = useFormStatus();
     return <>
     {
-        pending?<Button disabled variant={'outline'} className="w-full">
+        pending?<Button disabled variant={'outline'} className="w-full ">
             <Loader2 className="size-4 animate-spin "/> please wait!</Button>:
             <Button variant={'outline'} type="submit" className="w-full"><GoogleIcon/> Sign in with Google</Button>
     }

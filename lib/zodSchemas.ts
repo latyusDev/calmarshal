@@ -9,7 +9,7 @@ export const onboardingSchema = z.object({
     })
 })
 
-export function onboardingSchemaValidation(options?:{isUsernameUnique:()=>Promise<boolean>}){
+export const onboardingSchemaValidation = (options?:{isUsernameUnique:()=>Promise<boolean>})=>{
     return z.object({
           userName:z.string().min(3).max(150).regex(/^[a-zA-Z0-9-]+$/,{
         message:'Username can only contain letters,numbers and -'
@@ -38,3 +38,8 @@ export function onboardingSchemaValidation(options?:{isUsernameUnique:()=>Promis
 
     })
 }
+
+export const settingSchema = z.object({
+    fullName:z.string().min(3,{message:'full name is required'}).max(150),
+   profileImage:z.string()
+})

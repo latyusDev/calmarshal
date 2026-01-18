@@ -48,6 +48,8 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
+  grantId       String?  
+  grantEmail    String?  
   userName      String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
