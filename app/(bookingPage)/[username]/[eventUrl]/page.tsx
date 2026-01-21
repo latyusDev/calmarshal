@@ -1,5 +1,6 @@
 import { Calendar } from '@/app/components/bookingForm/Calendar'
 import { RenderCalender } from '@/app/components/bookingForm/RenderCalender'
+import { TimeTable } from '@/app/components/TimeTable'
 import { requireUser } from '@/app/lib/hooks'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
@@ -42,29 +43,49 @@ const getData = async(url:string,userName:string)=>{
     return data;
 }
 
-const BookingFormRoute = async({params}:{params:Promise<{username:string,eventUrl:string}>}) => {
-    const {eventUrl,username} = await params
-    const data = await getData(eventUrl,username);
+// const BookingFormRoute = async({params,searchParams}:{params:Promise<{username:string,eventUrl:string}>,searchParams?:string}) => {
+const BookingFormRoute = async ({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ username: string; eventUrl: string }>
+  searchParams: Promise<Record<string, string | undefined>>
+}) => {
+    const { eventUrl, username } = await params
+    const data = await getData(eventUrl,username)
+
+  const resolvedSearchParams = await searchParams
+  const selectedDate = resolvedSearchParams.date
+    ? new Date(resolvedSearchParams.date)
+    : new Date()
+    const formattedDate = new Intl.DateTimeFormat('en-US',{
+        weekday:'long',
+        day:'numeric',
+        month:'long'
+    }).format(selectedDate)
   return (
     <div className='min-h-screen w-screen flex items-center justify-center'>
         <Card className='max-w-[1000px] w-3/4 mx-auto'>
             {/* <CardContent className='p-5 md:grid md:grid-cols-[1fr,auto,1fr,auto,1fr]'> */}
             <CardContent className='p-5 flex justify-between '>
-                <div className='flex-[0.5]'>
+                <div className='flex-[0.3]'>
                     <img src={data.user?.image as string} alt='image' className='size-10 rounde-full '/>
                     <p className='text-sm font-medium text-muted-foreground mt-1 capitalize'>{data.user?.name}</p>
                     <h1 className='text-xl font-semibold mt-2'>{data.title}</h1>
                     <p className='text-sm font-medium text-muted-foreground'>{data.description}</p>
                     <div className='mt-5 flex flex-col gap-y-3'>
-                        <p className='flex items-center '><CalendarX2 className='size-4 mr-2 text-primary' /> <span className='text-sm text-muted-foreground'>23. sept 2024</span> </p>
+                        <p className='flex items-center '><CalendarX2 className='size-4 mr-2 text-primary' /> <span className='text-sm text-muted-foreground'>{formattedDate}</span> </p>
                         <p className='flex items-center mt-0.5'><Clock className='size-4 mr-2 text-primary' /> <span className='text-sm text-muted-foreground'>{data.duration} Minutes</span> </p>
                         <p className='flex items-center mt-0.5'><VideoIcon className='size-4 mr-2 text-primary' /> <span className='text-sm text-muted-foreground'>{data.videoSoftware} </span> </p>
                     </div>
                 {/* <Separator orientation='right' className='h-full w-1' /> */}
                 </div>
-                <div className='flex-[0.6]'>
+                <div className='flex-[0.4]'>
                     {/* <Calendar/> */}
                     <RenderCalender availability={data.user?.availability as any}/>
+                </div>
+                <div className='flex-[0.3]'>
+                   <TimeTable selectedDate={selectedDate} userName={username}/>
                 </div>
             </CardContent>
 
