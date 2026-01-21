@@ -61,6 +61,11 @@ const calculateAvailableTimeSlots =(date:string,dbAvailability:{
          'yyyy-MM-dd HH:mm',
          new Date()
     )
+    const availableTill = parse(
+        `${date}  ${dbAvailability.tillTime}`,
+         'yyyy-MM-dd HH:mm',
+         new Date()
+    )
 }
 
 export const TimeTable = async({selectedDate,userName}:TimeTableProps)=>{
